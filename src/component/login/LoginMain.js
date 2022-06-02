@@ -4,6 +4,7 @@ import { loginDataConnect } from '../../api/loginDataConnect';
 import { useLocation, useNavigate } from 'react-router-dom';
 import qs from 'query-string';
 import { socialLoginDataConnect } from '../../api/socialLoginDataConnect';
+import { csrfDataConnect } from '../../api/csrfDataConnect';
 
 const Container = styled.div`
     position: absolute;
@@ -67,8 +68,8 @@ const Container = styled.div`
     }
 
     .social-login-wrapper {
-        width: 50%;
         justify-content: center;
+        align-items: center;
         display: flex;
         column-gap: 12px;
         margin: 0 auto;
@@ -84,12 +85,11 @@ const Container = styled.div`
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 44px;
-        height: 44px;
+        /* width: 44px; */
+        /* height: 44px; */
         border: 0;
         border-radius: 4px;
         box-shadow: 0 1px 2px 0 rgb(0 0 0 / 20%);
-        cursor: pointer;
     }
 
     .service-box{
@@ -110,19 +110,15 @@ const NAVER_REST_API_KEY = process.env.REACT_APP_NAVER_REST_API_KEY;
 const KAKAO_REST_API_KEY = process.env.REACT_APP_KAKAO_REST_API_KEY;
 const KAKAO_NEEDS_AGREMENTS = "account_email,profile_nickname";
 const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_REST_API_KEY}&redirect_uri=${REDIRECT_URI + `?platform=kakao`}&response_type=code&scope=${KAKAO_NEEDS_AGREMENTS}`;
+const KAKAO_REST_API_SECRET_KEY = process.env.REACT_APP_KAKAO_REST_API_SECRET_KEY;
 
 const GOOGLE_REST_API_KEY = process.env.REACT_APP_GOOGLE_REST_API_KEY;
 const GOOGLE_NEEDS_AGREMENTS = "email profile";
 const GOOGLE_AUTH_URL = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_REST_API_KEY}&redirect_uri=${REDIRECT_URI + `?platform=google`}&response_type=code&scope=${GOOGLE_NEEDS_AGREMENTS}&access_type=offline`;
+const GOOGLE_REST_API_SECRET_KEY = process.env.REACT_APP_GOOGLE_REST_API_SECRET_KEY;
 
 const FACEBOOK_REST_API_KEY = process.env.REACT_APP_FACEBOOK_REST_API_KEY;
 const FACEBOOK_AUTH_URL = `https://www.facebook.com/v14.0/dialog/oauth?client_id=${FACEBOOK_REST_API_KEY}&redirect_uri=${REDIRECT_URI + `?platform=facebook`}&state=hihi`;
-
-// const KAKAO_REST_API_KEY = process.env.REACT_APP_KAKAO_REST_API_KEY;
-const KAKAO_REST_API_SECRET_KEY = process.env.REACT_APP_KAKAO_REST_API_SECRET_KEY;
-// const GOOGLE_REST_API_KEY = process.env.REACT_APP_GOOGLE_REST_API_KEY;
-const GOOGLE_REST_API_SECRET_KEY = process.env.REACT_APP_GOOGLE_REST_API_SECRET_KEY;
-// const FACEBOOK_REST_API_KEY = process.env.REACT_APP_FACEBOOK_REST_API_KEY;
 const FACEBOOK_REST_API_SECRET_KEY = process.env.REACT_APP_FACEBOOK_REST_API_SECRET_KEY;
 
 const LoginMain = () => {
@@ -130,7 +126,6 @@ const LoginMain = () => {
     const navigate = useNavigate();
 
     const location = useLocation();
-    // const navigate = useNavigate();
     const query = qs.parse(location.search);
 
     useEffect(() => {
@@ -257,6 +252,7 @@ const LoginMain = () => {
 
     // 피아르 로그인
     const __reqPostLogin = async () => {
+        await csrfDataConnect().getCsrfToken();
         await loginDataConnect().postLogin(loginData)
             .then(res => {
                 if (res?.status === 200 && res?.data?.message === 'success') {
@@ -412,8 +408,7 @@ const LoginMain = () => {
                 <div className='social-login-title'>간편로그인</div>
                 <div className='social-login-wrapper'>
                     <div className='social-button'>
-                        <div id='naverIdLogin' className='naver-login-box'>
-                        </div>
+                        <div id='naverIdLogin' className='naver-login-box'></div>
                     </div>
                     <div className='social-button'>
                         <a href={KAKAO_AUTH_URL} target='_brank'><img src="/assets/kakao_login.png" width='40' /></a>

@@ -1,6 +1,7 @@
 import { useEffect, useReducer } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { csrfDataConnect } from '../../api/csrfDataConnect';
 import { loginDataConnect } from '../../api/loginDataConnect';
 import { checkEmailFormat, comparePassword } from '../../utils/regexUtils';
 
@@ -85,6 +86,7 @@ const SignupMain = () => {
     }
 
     const __reqPostSignup = async () => {
+        await csrfDataConnect().getCsrfToken();
         await loginDataConnect().postSignup(userInfo)
             .then(res => {
                 if (res?.status === 200 && res?.data?.message === 'success') {
