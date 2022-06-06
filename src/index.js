@@ -25,3 +25,4 @@ reportWebVitals();
 
 axios.defaults.xsrfCookieName = 'csrf_token';
 axios.defaults.xsrfHeaderName = 'X-XSRF-TOKEN';
+axios.defaults.withCredentials = true;

@@ -13,6 +13,9 @@ const loginDataConnect = () =>{
             return await axios.post(`${API_SERVER_ADDRESS}/api/v1/signup`, userInfo, {
                 withCredentials: true
             })
+        },
+        postLogout: async function () {
+            return await axios.post(`${API_SERVER_ADDRESS}/api/v1/logout`, {})
         }
     }
 }

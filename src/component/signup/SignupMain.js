@@ -3,7 +3,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { csrfDataConnect } from '../../api/csrfDataConnect';
 import { loginDataConnect } from '../../api/loginDataConnect';
+import { BackdropComponent, useBackdropHook } from '../../hooks/backdrop/useBackdropHook';
 import { checkEmailFormat, comparePassword } from '../../utils/regexUtils';
+import SocialLoginComponent from '../social_login/SocialLoginMain';
 
 const Container = styled.div`
     position: absolute;
@@ -38,7 +40,7 @@ const Container = styled.div`
         width: 100%;
         padding: 12px;
         border-width: 0;
-        border: 1px solid #e0e0e0;
+        border: 1px solid #bcbcbc;
         border-radius: 5px;
         box-sizing: border-box;
     }
@@ -52,13 +54,31 @@ const Container = styled.div`
         color:white;
         font-weight: 600;
         font-size: 1rem;
+
+        :hover {
+            cursor: pointer;
+        }
+    }
+
+    .service-box{
+        text-align: right;
+    }
+
+    .move-page-btn {
+        font-size: 14px;
+        color: #000;
     }
 `;
 
 const SignupMain = () => {
     const [userInfo, dispatchUserInfo] = useReducer(userInfoReducer, initialUserInfo);
     const navigate = useNavigate();
-    const location = useLocation();
+
+    const {
+        open: backdropOpen,
+        onActionOpen: onActionOpenBackdrop,
+        onActionClose: onActionCloseBackdrop
+    } = useBackdropHook();
 
     const onChangeInputValue = (e) => {
         dispatchUserInfo({
@@ -78,7 +98,7 @@ const SignupMain = () => {
             return;
         }
         if (!comparePassword(userInfo.password, userInfo.passwordCheck)) {
-            alert('비밀번호와 비밀번호확인 값을 동일하게 입력해주세요.')
+            alert('\'비밀번호\'와 \'비밀번호 확인\' 값을 동일하게 입력해 주세요.');
             return;
         }
 
@@ -158,6 +178,15 @@ const SignupMain = () => {
                     </div>
                 </div>
             </form>
+            <div className='service-box'>
+                <a href='/login' className='move-page-btn'>로그인</a>
+            </div>
+            <SocialLoginComponent
+                onActionOpenBackdrop={onActionOpenBackdrop}
+                onActionCloseBackdrop={onActionCloseBackdrop}
+            />
+
+            <BackdropComponent open={backdropOpen} />
         </Container>
     )
 }
