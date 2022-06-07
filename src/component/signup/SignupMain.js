@@ -4,20 +4,19 @@ import styled from 'styled-components';
 import { csrfDataConnect } from '../../api/csrfDataConnect';
 import { loginDataConnect } from '../../api/loginDataConnect';
 import { BackdropComponent, useBackdropHook } from '../../hooks/backdrop/useBackdropHook';
-import { checkEmailFormat, comparePassword } from '../../utils/regexUtils';
+import { checkEmailFormat, checkPasswordFormat, comparePassword } from '../../utils/regexUtils';
 import SocialLoginComponent from '../social_login/SocialLoginMain';
 
 const Container = styled.div`
     position: absolute;
     left: 50%;
-    top: 40%;
+    top: 50%;
     transform: translate(-50%,-50%);
     width: 30%;
 
     @media screen and (max-width: 992px) {
-        width: 100%;
+        width: 90%;
     }
-
     .form-wrapper {
         margin-bottom: 4%;
     }
@@ -68,6 +67,12 @@ const Container = styled.div`
         font-size: 14px;
         color: #000;
     }
+
+    .input-info {
+        font-size: 12px;
+        color: #757575;
+        margin-top: 3px;
+    }
 `;
 
 const SignupMain = () => {
@@ -95,6 +100,10 @@ const SignupMain = () => {
 
         if (!checkEmailFormat(userInfo.username)) {
             alert('이메일 형식을 확인해 주세요.');
+            return;
+        }
+        if(!checkPasswordFormat(userInfo.password)) {
+            alert('비밀번호 형식을 확인해 주세요.');
             return;
         }
         if (!comparePassword(userInfo.password, userInfo.passwordCheck)) {
@@ -150,6 +159,9 @@ const SignupMain = () => {
                             placeholder='******'
                             required
                         ></input>
+                        <div className='input-info'>공백없이 8자 이상 20자 이하.</div>
+                        <div className='input-info'>하나 이상의 문자, 숫자, 특수문자 조합.</div>
+                        <div className='input-info'> 가능한 특수문자 '.?!@#$%^&*'.</div>
                     </div>
                     <div>
                         <label>비밀번호 확인</label>

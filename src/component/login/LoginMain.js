@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useEffect, useReducer } from 'react';
+import { useReducer } from 'react';
 import { loginDataConnect } from '../../api/loginDataConnect';
 import { useNavigate } from 'react-router-dom';
 import { csrfDataConnect } from '../../api/csrfDataConnect';
@@ -14,7 +14,7 @@ const Container = styled.div`
     width: 40%;
 
     @media screen and (max-width: 992px) {
-        width: 100%;
+        width: 90%;
     }
 
     .title {
